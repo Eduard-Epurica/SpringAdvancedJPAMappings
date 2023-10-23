@@ -1,11 +1,15 @@
 package com.eduard.advancedjpa.dao;
 
+import com.eduard.advancedjpa.entity.Course;
 import com.eduard.advancedjpa.entity.Instructor;
 import com.eduard.advancedjpa.entity.InstructorDetail;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class AppDAOImpl implements AppDAO{
@@ -62,6 +66,45 @@ public class AppDAOImpl implements AppDAO{
         //delete the instructor detail
         //when we have cascade all, the instructor detail deletion will also trigger the associated instructor deletion
         entityManager.remove(tempInstructorDetail);
+
+    }
+
+    //Finding courses by the instructor ID
+    //By default this just returns the courses that match the ID, they are not automatically associated with the instructor
+    //We need to associate the instructor with the actual list of courses we retrieve from this method
+    @Override
+    public List<Course> findCoursesByInstructorId(int theId) {
+
+        //create a custom query for retrieving the courses by instructor ID
+        TypedQuery<Course> query = entityManager.createQuery(
+                "FROM Course WHERE instructor.id = :data", Course.class);
+        query.setParameter("data",theId);
+
+        //execute query
+        List<Course> courses = query.getResultList();
+
+        return courses;
+
+    }
+
+    @Override
+    public Instructor findInstructorByIdJoinFetch(int theId) {
+
+        //create query
+        //i means instructor
+        TypedQuery<Instructor> query = entityManager.createQuery(
+                                                    "SELECT i FROM Instructor i "
+                                                        +"JOIN FETCH i.courses "
+                                                            +"JOIN FETCH i.instructorDetail "
+                                                            +"WHERE i.id= :data", Instructor.class);
+
+        query.setParameter("data",theId);
+
+        //execute query
+        Instructor instructor = query.getSingleResult();
+
+        return instructor;
+
     }
 }
  

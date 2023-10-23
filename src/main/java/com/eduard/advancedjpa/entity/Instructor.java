@@ -2,6 +2,10 @@ package com.eduard.advancedjpa.entity;
 
 import jakarta.persistence.*;
 
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name="instructor")
 public class Instructor {
@@ -21,6 +25,12 @@ public class Instructor {
     private String lastName;
     @Column(name="email")
     private String email;
+
+    @OneToMany(fetch = FetchType.LAZY,
+               mappedBy = "instructor",
+               cascade = {CascadeType.DETACH,CascadeType.MERGE,
+                           CascadeType.PERSIST,CascadeType.REFRESH})
+    private List<Course> courses;
 
     // set up mapping to InstructorDetail entity
     @OneToOne(cascade = CascadeType.ALL)
@@ -78,6 +88,28 @@ public class Instructor {
 
     public void setInstructorDetail(InstructorDetail instructorDetail) {
         this.instructorDetail = instructorDetail;
+    }
+
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
+    }
+
+    //add convenience methods for bidirecitonal relationship
+    public void add(Course tempCourse){
+
+
+        if(courses == null){
+            courses = new ArrayList<>();
+        }
+
+        courses.add(tempCourse);
+
+        tempCourse.setInstructor(this);
+
     }
 
     //generate toString() method

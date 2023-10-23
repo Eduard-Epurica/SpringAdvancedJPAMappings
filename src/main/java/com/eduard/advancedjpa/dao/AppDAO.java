@@ -1,7 +1,10 @@
 package com.eduard.advancedjpa.dao;
 
+import com.eduard.advancedjpa.entity.Course;
 import com.eduard.advancedjpa.entity.Instructor;
 import com.eduard.advancedjpa.entity.InstructorDetail;
+
+import java.util.List;
 
 public interface AppDAO {
 
@@ -14,6 +17,12 @@ public interface AppDAO {
     InstructorDetail findInstructorDetailById(int theId);
 
     void deleteInstructorDetailById(int theId);
+
+    List<Course> findCoursesByInstructorId(int theId);
+
+    Instructor findInstructorByIdJoinFetch(int theId);
+
+    void update(Instructor theInstructor);
 
 
 }
