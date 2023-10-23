@@ -43,11 +43,58 @@ public class AdvancedjpaApplication {
 
 			// findCoursesForInstructor(appDAO);
 
-			findInstructorWithCoursesJoinFetch(appDAO);
+			// findInstructorWithCoursesJoinFetch(appDAO);
+
+			//updateInstructor(appDAO);
+
+			// updateCourse(appDAO);
+
+			 deleteCourse(appDAO);
 
 		};
 
 
+	}
+
+	private void deleteCourse(AppDAO appDAO) {
+		int theId=11;
+
+		System.out.println("Deleting course is: " + theId);
+
+		appDAO.deleteCourseById(theId);
+
+		System.out.println("DONE! DELETE! BYE!");
+	}
+
+	private void updateCourse(AppDAO appDAO) {
+
+		int theId = 11;
+
+		//find the course
+		System.out.println("Finding course id: " + theId);
+		Course course = appDAO.findCourseById(theId);
+
+		//update the course
+		course.setTitle("Bannna Pie 101");
+		appDAO.update(course);
+
+		System.out.println("Updated Course");
+
+	}
+
+	private void updateInstructor(AppDAO appDAO) {
+
+		int theId = 1;
+
+		//find the instructor
+		System.out.println("Finding instructor id: " + theId);
+		Instructor instructor = appDAO.findInstructorById(theId);
+
+		//update the instructor
+		instructor.setLastName("TESTER");
+		appDAO.update(instructor);
+
+		System.out.println("Updated Instructor");
 	}
 
 	private void findInstructorWithCoursesJoinFetch(AppDAO appDAO) {
@@ -159,8 +206,9 @@ public class AdvancedjpaApplication {
 	}
 
 	private void removeInstructor(AppDAO appDAO) {
+
 		int theId=1;
-		System.out.println("Finding instrucotr id: " + theId);
+		System.out.println("Finding instructor id: " + theId);
 
 		Instructor tempInstructor = appDAO.findInstructorById(theId);
 

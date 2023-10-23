@@ -42,6 +42,15 @@ public class AppDAOImpl implements AppDAO{
         //retrieve the instructor
         Instructor tempInstructor = entityManager.find(Instructor.class, theId);
 
+        // get the courses for this specific instructor
+        List<Course> courses = tempInstructor.getCourses();
+
+        // break association of all courses for the instructor
+        // if we dont remove the instructor from the courses we will have a constraint violation
+        for(Course course:courses){
+            course.setInstructor(null);
+        }
+
         //delete the instructor
         entityManager.remove(tempInstructor);
     }
@@ -57,7 +66,6 @@ public class AppDAOImpl implements AppDAO{
 
         //retrieve instructor detail
         InstructorDetail tempInstructorDetail = entityManager.find(InstructorDetail.class,theId);
-
 
         // remove the associated object reference
         // break bi-directional link
@@ -104,6 +112,38 @@ public class AppDAOImpl implements AppDAO{
         Instructor instructor = query.getSingleResult();
 
         return instructor;
+
+    }
+
+    @Override
+    @Transactional
+    public void update(Instructor theInstructor) {
+
+        //delete the instructor
+        entityManager.merge(theInstructor);
+
+    }
+
+    @Override
+    @Transactional
+    public void update(Course theCourse) {
+        entityManager.merge(theCourse);
+    }
+
+    @Override
+    public Course findCourseById(int Id) {
+        return entityManager.find(Course.class, Id);
+    }
+
+    @Override
+    @Transactional
+    public void deleteCourseById(int theId) {
+
+        //retrieve the course
+        Course tempCourse = entityManager.find(Course.class,theId);
+
+        //delete the course
+        entityManager.remove(tempCourse);
 
     }
 }
