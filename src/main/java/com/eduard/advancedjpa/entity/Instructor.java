@@ -1,9 +1,9 @@
-package entity;
+package com.eduard.advancedjpa.entity;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="instructor_detail")
+@Table(name="instructor")
 public class Instructor {
 
 

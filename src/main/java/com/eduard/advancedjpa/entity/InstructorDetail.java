@@ -1,4 +1,4 @@
-package entity;
+package com.eduard.advancedjpa.entity;
 
 import jakarta.persistence.*;
 
@@ -21,6 +21,11 @@ public class InstructorDetail {
     @Column(name="hobby")
     private String hobby;
 
+
+    //Mapped by refers to the private instructorDetail in the instructor class
+    @OneToOne(mappedBy = "instructorDetail", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Instructor instructor;
+
     //create constructors
     public InstructorDetail(){
 
@@ -31,6 +36,13 @@ public class InstructorDetail {
     }
 
     //generate getters/setters
+    public Instructor getInstructor() {
+        return instructor;
+    }
+
+    public void setInstructor(Instructor instructor) {
+        this.instructor = instructor;
+    }
 
     public int getId() {
         return id;
