@@ -1,9 +1,7 @@
 package com.eduard.advancedjpa;
 
 import com.eduard.advancedjpa.dao.AppDAO;
-import com.eduard.advancedjpa.entity.Course;
-import com.eduard.advancedjpa.entity.Instructor;
-import com.eduard.advancedjpa.entity.InstructorDetail;
+import com.eduard.advancedjpa.entity.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -49,9 +47,150 @@ public class AdvancedjpaApplication {
 
 			// updateCourse(appDAO);
 
-			 deleteCourse(appDAO);
+			// deleteCourse(appDAO);
+
+			 deleteStudent(appDAO);
+
+			// createCourseAndReviews(appDAO);
+
+			// retrieveCourseAndReviews(appDAO);
+
+			// deleteCourseAndReviews(appDAO);
+
+			// createCourseAndStudents(appDAO);
+
+			// findCourseAndStudents(appDAO);
+
+			// findStudentAndCourses(appDAO);
+
+			// addMoreCoursesForStudent(appDAO);
+
 
 		};
+
+
+	}
+
+	private void deleteStudent(AppDAO appDAO) {
+
+		int theId=3;
+
+		System.out.println("Deleting Student: " + theId);
+
+		appDAO.deleteStudentById(theId);
+
+		System.out.println("DONE! DELETE! BYE!");
+	}
+
+	private void addMoreCoursesForStudent(AppDAO appDAO) {
+
+		Student tempStudent = appDAO.findStundentAndCourseById(2);
+
+		//create more courses
+		Course nC1 = new Course("Mohito Class");
+		Course nC2 = new Course("Burrito Class");
+
+		//connect new courses to student
+		tempStudent.addCourse(nC1);
+		tempStudent.addCourse(nC2);
+
+		//update the database
+		System.out.println("Saving student: " + tempStudent);
+		System.out.println("With courses " + tempStudent.getCourses());
+		appDAO.update(tempStudent);
+		System.out.println("Done!!!!");
+
+
+	}
+
+	private void findStudentAndCourses(AppDAO appDAO) {
+		Student tempStudent = appDAO.findStundentAndCourseById(2);
+
+		System.out.println("Loaded student: " + tempStudent);
+		System.out.println("Courses: " + tempStudent.getCourses());
+
+		System.out.println("Done!");
+
+	}
+
+	private void findCourseAndStudents(AppDAO appDAO) {
+
+		Course tempCourse = appDAO.findCourseAndStudentsById(10);
+
+		System.out.println("Loaded course: " + tempCourse);
+		System.out.println("Students: " + tempCourse.getStudents());
+
+		System.out.println("Done!");
+	}
+
+	private void createCourseAndStudents(AppDAO appDAO) {
+
+		// create a course
+		Course theCourse = new Course("PotatoFarms");
+
+		// create the students
+		Student st1 = new Student("Eduard", "Epurica", "ediepurica@gmail.com");
+		Student st2 = new Student("Ana", "Safta", "anasafta@gmail.com");
+		Student st3 = new Student("Claudiu", "Epurica", "clauepi@gmail.com");
+		Student st4 = new Student("ANdrew", "Moore", "andrewmoore@gmail.com");
+
+		// add students to the course
+		theCourse.addStudent(st1);
+		theCourse.addStudent(st2);
+		theCourse.addStudent(st3);
+		theCourse.addStudent(st4);
+
+		// save the course and associated students
+		System.out.println("Saving the course and students...");
+		System.out.println("Course: " + theCourse);
+		System.out.println("Students: " + theCourse.getStudents());
+		appDAO.save(theCourse);
+		System.out.println("Done!!!");
+
+
+	}
+
+	private void deleteCourseAndReviews(AppDAO appDAO) {
+
+		System.out.println("Deleting course id: " + 10);
+
+		appDAO.deleteCourseById(10);
+
+		System.out.println("Done...");
+
+	}
+
+	private void retrieveCourseAndReviews(AppDAO appDAO) {
+
+		// get the course and reviews
+		Course theCourse = appDAO.findCourseAndReviewsById(10);
+
+		// print the course
+		System.out.println(theCourse);
+
+		// print the reviews
+		System.out.println(theCourse.getReviews());
+	}
+
+	private void createCourseAndReviews(AppDAO appDAO) {
+
+		//create a course
+		Course theCourse = new Course("Panificaiton 101");
+
+		//add some reviews
+		theCourse.addReview(new Review("Great course...loved it"));
+		theCourse.addReview(new Review("Bad course...hated it"));
+		theCourse.addReview(new Review("Decent course...was ok"));
+		theCourse.addReview(new Review("Great course...job well done"));
+
+
+		//save the course... and leverage the cascade all
+		System.out.println("Saving the course...");
+		System.out.println(theCourse);
+		System.out.println(theCourse.getReviews());
+
+		appDAO.save(theCourse);
+		System.out.println("Done!");
 
 
 	}

@@ -2,6 +2,9 @@ package com.eduard.advancedjpa.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name="course")
 public class Course {
@@ -16,10 +19,23 @@ public class Course {
     @Column(name="title")
     private String title;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "course_id")
+    private List<Review> reviews;
+
     @ManyToOne(cascade={CascadeType.DETACH,CascadeType.MERGE,
                         CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinColumn(name="instructor_id")
     private Instructor instructor;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade={CascadeType.DETACH,CascadeType.MERGE,
+            CascadeType.PERSIST,CascadeType.REFRESH})
+    @JoinTable(
+            name= "course_student",
+            joinColumns = @JoinColumn(name = "course_id"),
+            inverseJoinColumns = @JoinColumn(name = "student_id")
+    )
+    private List<Student> students;
 
     // define contructors
 
@@ -31,6 +47,21 @@ public class Course {
     }
 
     // define getters and setters
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<Student> students) {
+        this.students = students;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
 
     public int getId() {
         return id;
@@ -57,7 +88,6 @@ public class Course {
     }
 
     // define toString
-
     @Override
     public String toString() {
         return "Course{" +
@@ -65,6 +95,27 @@ public class Course {
                 ", title='" + title + '\'' +
                 '}';
     }
+
+    //add convenience methods
+    public void addReview(Review theReview){
+
+        if(this.reviews == null){
+            this.reviews = new ArrayList<>();
+        }
+
+        this.reviews.add(theReview);
+    }
+
+    public void addStudent(Student theStudent){
+
+        if(this.students == null){
+            this.students = new ArrayList<>();
+        }
+
+        this.students.add(theStudent);
+    }
+
+
 
 
 }
